@@ -1,13 +1,9 @@
 #include "Student.h"
 
+std::string Student::subjects[SUBSIZE]={".",".",".",".",".","."};
+
 Student::Student()
 {
-    subjects[0]="Matematicas";
-    subjects[1]="Fisica";
-    subjects[2]="Quimica";
-    subjects[3]="Programacion";
-    subjects[4]="Ingles";
-    subjects[5]="Etica";
 }
 
 void Student::setName(std::string name)
@@ -23,20 +19,20 @@ void Student::setSubject(int index, string subject)
 
 std::string Student::getSubject(int index)
 {
-	return subjects[index];
+	return Student::subjects[index];
 }
 
 int Student::subjectExist(string subject)
 {
   int x=0;
-  while(x<sub)
+  while(x<SUBSIZE)
   {
       if(subjects[x]==subject)
           break;
       x++;
   }
 
-  if (x>=sub)
+  if (x>=SUBSIZE)
   {
       std::cout<<"The subject doesn't exist"<<std::endl;
       return -1;
@@ -52,11 +48,11 @@ void Student::changeGrade(int index,int grade)
     {
         grades[index]=grade;
         avGrade=0;
-        for(int x=0;x<sub;x++)
+        for(int x=0;x<SUBSIZE;x++)
         {
           avGrade+=grades[x];
         }
-        avGrade=avGrade/sub;
+        avGrade=avGrade/SUBSIZE;
     }
 }
 
@@ -94,7 +90,7 @@ int Student::getGrade(int index)
 void Student::printGrades()
 {
 	std::cout<<"\t"<<name<<std::endl;
-	for(int x=0;x<sub;x++)
+	for(int x=0;x<SUBSIZE;x++)
 	{
 		std::cout<<"\t"<<subjects[x]<<": "<<grades[x]<<std::endl;
 	}
