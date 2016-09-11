@@ -1,5 +1,12 @@
-asdcadsc
-adsfcasdca
-casdcasda
-acsdcadc
-asdcqaerfq
+Number of Students: 5
+Matematicas Fisica Quimica Programacion Ingles Etica 
+Juan Ernesto Gonzalez Garcia
+80 50 70 90 60 100
+Pedro Perez Gutierrez
+45 98 56 88 82 0
+Javier Martinez Chavez
+99 74 82 92 100 100
+Phil Gerardo Cervera Godinez
+0 3 45 60 0 90
+Juan Jose Leal Godinez
+100 70 80 100 90 100

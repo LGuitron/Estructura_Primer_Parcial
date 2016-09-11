@@ -9,9 +9,10 @@ jpgl1997@gmail.com
 */
 
 
-#include <iostream>
+
+#include <fstream>
+#include <sstream>
 #include <stdlib.h>
-#include <stdio.h>
 #include "Student.h"
 
 template <class type>
@@ -19,38 +20,37 @@ class Array
 {
 
 private:
+	int size;
 	type* data;
+	string subjects[6];
 	int binarySearchRecursive(type item, int start, int end);
+	void mergeSort( int middle, int min, int max);
+	void mergeSort(int min, int max);
 
 public:
-	Array(int size);
+	Array();
 	~Array();
 	void setElement(int index, type item);
 	type getElement(int index);
 	void printRecursive(unsigned n);
-	void mergeSort();
-	void mergePartitions(type * partA,int sizeA ,type* partB, int SizeB, type*partition);
-	
+	void mergeS();
 
 	//Searching
 	int binarySearchRecursive(type item);
 
-	//Helper method
+	//Helper methods//
 	bool checkOrdered();
-	
-	//Operator overloads//
-	type & operator [](const int index);
-	const type & operator [](const int index)const;
+	type & getStudent(int index);
+	int getSize();
 	
 	//File Reader//
-	void readFile();
+	void getData();
 };
 
 
 template <class type>
 Array<type>::Array()
 {
-
 }
 
 //______________________________________Filling array________________________________//
@@ -118,85 +118,93 @@ int Array<type>::binarySearchRecursive(type item, int start, int end)
 
 	else
 		return middle;
-	
+
 }
 
 //__________________________________________Sorting_____________________________________//
+template <class Type>
+void Array<Type>::mergeS()
+{
+	mergeSort(0, size - 1);
+}
 
-template <class type>
-void Array<type>::mergeSort()
+template <class Type>
+void Array<Type>::mergeSort(int min, int max)
 {
-	mergeSort(size,data);
-}
-template <class type>
-void Array<type>::mergeSort(int partitionSize, type* partition)
-{
-	
-	int middle = (int)(partitionSize/2);
-	type partition1[middle];
-	type partition2[partitionSize - middle];	
-	
-	
-	//Subdivide array into smaller partitions until they are of size 1//
-	if(partitionSize>1)
+	if (min < max)
 	{
-		for(int i = 0; i<middle; i++)
-		{
-			partition1[i]=partition[i];
-		}	
-		
-		for(int i = middle; i<partitionSize; i++)
-		{
-			partition2[i-middle] = partition[i];
-		}	
-		
-		mergeSort(middle,partition1);
-		mergeSort(partitionSize-middle,partition2);
-		
-		//Start sorting partitions, it will start with partitions of size 1 and then go with the bigger ones//
-		mergePartitions(partition1,middle,partition2,partitionSize-middle,partition);
+
+		mergeSort(min, min + (max - min) / 2);
+		mergeSort((min + (max - min) / 2) + 1, max);
+
+		mergeSort(min + (max - min) / 2, min, max);
+
 	}
-	
 }
-template <class type>
-void Array<type>::mergePartitions(type * partA ,int sizeA, type* partB, int sizeB, type* partition)
+
+template <class Type>
+void Array<Type>::mergeSort(int middle, int min, int max)
 {
-	int index_A=0;
-	int index_B=0;
-	int index_data=0;
-	
-	//Make sure to keep inside partitions length when sorting them//
-	while(index_A<sizeA && index_B<sizeB)
+	//Variables & counters
+	int a = 0;
+	int b = 0;
+	int count = min;
+	int md = middle - min + 1;
+	int mu = max - middle;
+
+	//temporal arrays
+	Type * cache2 = new Type[mu];
+	Type * cache1 = new Type[md];
+
+	//Write the temporal info in the arrays
+	for (int x = 0; x < md; x++)
 	{
-		if(partA[index_A]<partB[index_B])
+		cache1[x] = data[min + x];
+
+	}
+	for (int y = 0; y <mu; y++)
+	{
+		cache2[y] = data[middle +1+ y];
+	}
+
+	//Compare info of the temp arrays
+	while (a < md && b < mu)
+	{
+		if (cache1[a] <= cache2[b])
 		{
-			partition[index_data]=partA[index_A];
-			index_A++;
+			data[count] = cache1[a];
+			a++;
+			count++;
 		}
-		
 		else
 		{
-			partition[index_data]=partB[index_B];
-			index_B++;
+			data[count] = cache2[b];
+			b++;
+			count++;
+
 		}
-		index_data++;
+
 	}
-	
-	//Check if any of the partitions remained with data after one of them is done//
-	while(index_A<sizeA)
+
+	//write the rest of the info
+	while (a < md)
 	{
-		partition[index_data]=partA[index_A];
-		index_A++;
-		index_data++;
+		data[count] = cache1[a];
+		a++;
+		count++;
 	}
-	
-	while(index_B<sizeB)
+
+	while (b < mu)
 	{
-		partition[index_data]=partB[index_B];
-		index_B++;
-		index_data++;
+		data[count] = cache2[b];
+		b++;
+		count++;
 	}
+	//delete temporal arrays
+	delete[] cache1;
+	delete[] cache2;
 }
+
 
 //_________________________________Helper Methods________________________________//
 template <class type>
@@ -212,50 +220,115 @@ bool Array<type>::checkOrdered()
 	return true;
 }
 
-//________________________________Operator Overloads_____________________________//
 template <class type>
-type & Array<type>::operator [](const int index)
+type & Array<type>::getStudent(int index)
 {
-	if(index >=0 && index<size)
-		return data[index];
+	return(data[index]);
+}
+	
+template <class type>	
+int Array<type>::getSize()
+{
+	return size;
 }
 
-//Read only
-//Para que se mande llamar esta funcion se debe mandar a llamad con un Array constante
-template <class type>
-const type & Array<type>::operator [](const int index)const
-{
-	if(index >=0 && index<size)
-		return data[index];
-}
 
 //________________________________File Reader_____________________________________//
 
 template <class type>
-void Array<type>::readFile()
+void Array<type>::getData()
 {
-	FILE * pFile;
-   char buffer [50];
+	std::ifstream file;
+	char buffer[80];
+	std::string currentLine;
+	int lineNum=0;
+	int wordNum=0;
+	int currentStudent=0;
+	file.open("StudentFile.txt",fstream::in);
 
-   errno_t errorCode = fopen_s(&pFile,"StudentFile.txt" , "r");
-   
-   if (pFile == NULL) 
-		perror ("Error opening file");
-		
-   else
+   if(file.fail())
    {
-     while ( ! feof (pFile) )
-     {
-       if ( fgets (buffer , 100 , pFile) == NULL ) break;
-       fputs (buffer , stdout);
-     }
-     fclose (pFile);
+      std::cout<<"Error opening file"<<std::endl;
    }
+   //Get size of array//
+    while(lineNum==0)
+	{
+		file.getline(buffer,sizeof(buffer));
+		currentLine=buffer;
 
+		//istringstream distinguishes substrings separated by space//
+		std::istringstream iss(currentLine);
+		do
+		{
+			std::string subString;
+			iss >> subString;
+			if(wordNum==3)
+			{
+				size = atoi(subString.c_str());
+				data= new type[size];
+			}
+			wordNum++;
+
+		}while (iss);
+		lineNum++;
+	}
+
+     //Get subjects//
+    while(lineNum==1)
+	{
+		file.getline(buffer,sizeof(buffer));
+		currentLine=buffer;
+		wordNum=0;
+		std::istringstream iss(currentLine);
+		do
+		{
+			std::string subString;
+			iss >> subString;
+			if(wordNum<6)
+				subjects[wordNum]=subString;
+			wordNum++;
+
+		}while (iss);
+		lineNum++;
+	}
+
+   	while(!file.eof())
+	{
+		wordNum=0;
+		file.getline(buffer,sizeof(buffer));
+		//std::cout<<lineNum<<std::endl;
+		//Name of a student//
+		if(lineNum%2==0)
+		{
+			Student newStudent;
+			data[currentStudent]=newStudent;
+			data[currentStudent].setName(buffer);
+		}
+
+		//Grades of a student//
+		else
+		{
+			currentLine=buffer;
+			std::istringstream iss(currentLine);
+			do
+			{
+				std::string grade;
+				iss >> grade;
+				if(wordNum<6)
+					data[currentStudent].changeGrade(wordNum, atoi(grade.c_str()));
+				//std::cout<<subjects[wordNum]<<std::endl;
+				//std::cout<<grade<<std::endl;
+				wordNum++;
+
+			}while (iss);
+			currentStudent++;
+		}
+		lineNum++;
+	}
 }
 
 template <class type>
 Array<type>::~Array()
 {
-	delete[]data;
+	//delete[]data;
 }

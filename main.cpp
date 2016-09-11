@@ -1,10 +1,8 @@
-#include "Array.h" 
+#include "Menu.h"
 
 int main()
 {
-    Array<Student> StudentArray(); 
-    //Student.subjects[1]="Español";
-    StudentArray.readFile();
-    
+	Menu menu;
+	menu.display();
 return 0;
 }
