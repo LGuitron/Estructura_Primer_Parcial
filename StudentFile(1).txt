@@ -1,5 +1,7 @@
 Number of Students: 5
-Matematicas Fisica Quimica Programacion Ingles Etica 
+Matematicas Fisica Quimica Programacion Historia Deportes 
+Phil Gerardo Cervera Godinez
+100 3 10000 60 0 90 
 Javier Martinez Chavez
 99 74 82 92 100 100 
 Juan Jose Leal Godinez
@@ -8,5 +10,3 @@ Juan Ernesto Gonzalez Garcia
 80 50 70 90 60 100 
 Pedro Perez Gutierrez
 45 98 56 88 82 0 
-Phil Gerardo Cervera Godinez
-0 3 45 60 0 90 
