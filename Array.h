@@ -22,7 +22,6 @@ class Array
 private:
 	int size;
 	type* data;
-	string subjects[6];
 	int binarySearchRecursive(type item, int start, int end);
 	void mergeSort( int middle, int min, int max);
 	void mergeSort(int min, int max);
@@ -30,9 +29,13 @@ private:
 public:
 	Array();
 	~Array();
+	
+	//Set & get methods
 	void setElement(int index, type item);
-	type getElement(int index);
-	void printRecursive(unsigned n);
+	type & getElement(int index);
+	int getSize();
+	
+	//Sorting
 	void mergeS();
 
 	//Searching
@@ -40,8 +43,7 @@ public:
 
 	//Helper methods//
 	bool checkOrdered();
-	type & getStudent(int index);
-	int getSize();
+	void printRecursive(unsigned n);
 	
 	//File Reader//
 	void getData();
@@ -53,7 +55,7 @@ Array<type>::Array()
 {
 }
 
-//______________________________________Filling array________________________________//
+//______________________________________Set & Get Methods________________________________//
 
 template <class type>
 void Array<type>::setElement(int index, type item)
@@ -65,7 +67,7 @@ void Array<type>::setElement(int index, type item)
 }
 
 template <class type>
-type Array<type>::getElement(int index)
+type & Array<type>::getElement(int index)
 {
 	if(index >=0 && index<size)
 	{
@@ -78,20 +80,10 @@ type Array<type>::getElement(int index)
 	}
 }
 
-template <class type>
-void Array<type>::printRecursive(unsigned n)
+template <class type>	
+int Array<type>::getSize()
 {
-
-	if (n < size)
-	{
-		std::cout << data[n] << ", ";
-		printRecursive(n + 1);
-	}
-
-	else
-	{
-		std::cout << std::endl;
-	}
+	return size;
 }
 
 //________________________________________Searching_______________________________________//
@@ -219,19 +211,22 @@ bool Array<type>::checkOrdered()
 	}
 	return true;
 }
-
-template <class type>
-type & Array<type>::getStudent(int index)
-{
-	return(data[index]);
-}
 	
-template <class type>	
-int Array<type>::getSize()
+template <class type>
+void Array<type>::printRecursive(unsigned n)
 {
-	return size;
-}
 
+	if (n < size)
+	{
+		std::cout << data[n] << ", ";
+		printRecursive(n + 1);
+	}
+
+	else
+	{
+		std::cout << std::endl;
+	}
+}
 
 //________________________________File Reader_____________________________________//
 
@@ -284,8 +279,8 @@ void Array<type>::getData()
 		{
 			std::string subString;
 			iss >> subString;
-			if(wordNum<6)
-				subjects[wordNum]=subString;
+			if(wordNum<SUBSIZE)
+				Student::setSubject(wordNum,subString);
 			wordNum++;
 
 		}while (iss);
@@ -296,7 +291,6 @@ void Array<type>::getData()
 	{
 		wordNum=0;
 		file.getline(buffer,sizeof(buffer));
-		//std::cout<<lineNum<<std::endl;
 		//Name of a student//
 		if(lineNum%2==0)
 		{
@@ -314,10 +308,8 @@ void Array<type>::getData()
 			{
 				std::string grade;
 				iss >> grade;
-				if(wordNum<6)
+				if(wordNum<SUBSIZE)
 					data[currentStudent].changeGrade(wordNum, atoi(grade.c_str()));
-				//std::cout<<subjects[wordNum]<<std::endl;
-				//std::cout<<grade<<std::endl;
 				wordNum++;
 
 			}while (iss);
@@ -330,5 +322,4 @@ void Array<type>::getData()
 template <class type>
 Array<type>::~Array()
 {
-	//delete[]data;
 }
