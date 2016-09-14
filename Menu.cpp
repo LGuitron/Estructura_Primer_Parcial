@@ -13,9 +13,6 @@ jpgl1997@gmail.com
 Menu::Menu()
 {
 	std::cout<<std::endl<<"Welcome to the Student Grade System!"<<std::endl<<std::endl;
-	//Get Array data from text file and order students by their averages//
-	StudentArray.getData();
-	StudentArray.mergeS();
 }
 
 void Menu::display()
@@ -68,9 +65,9 @@ void Menu::gradesByStudent()
 	}
 	
 	selection(1,StudentArray.getSize());
-	
 	std::cout<<std::endl;
 	
+	//Print all the grades of the selected student//
 	StudentArray.getElement(selectedOption-1).printGrades();
 	goBack();
 }
@@ -87,8 +84,10 @@ void Menu::gradesBySubject()
 	
 	selection(1,SUBSIZE);
 	
+	//Print selected subject's name//
 	std::cout<<std::endl<<Student::getSubject(selectedOption-1)<<std::endl;
 	
+	//Print students' names and grades in the selected subject//
 	for(int i = 0; i<StudentArray.getSize();i++)
 	{
 		std::cout<<i+1<<". "<<StudentArray.getElement(i).getName()<<": "<<StudentArray.getElement(i).getGrade(selectedOption-1)<<std::endl;
@@ -98,7 +97,9 @@ void Menu::gradesBySubject()
 
 }
 
-//Sort and show array of students//
+//Show sorted array of students
+//(Array gets sorted at the Array class constructor
+//and whenever a student's grade is modified)
 void Menu::sortedAverages()
 {
 	std::cout<<std::endl;
@@ -146,7 +147,7 @@ void Menu::modifyGrades()
 	selection(0,100);
 	newGrade=selectedOption;
 	
-	StudentArray.getElement(student).changeGrade(subject,newGrade);
+	StudentArray.getElement(student).setGrade(subject,newGrade);
 	StudentArray.mergeS();
 	goBack();
 
@@ -168,11 +169,13 @@ void Menu::writeTextFile()
    }
    file<<std::endl;
 	
-	//Student data//
+	//Write student data//
 	for(int i=StudentArray.getSize()-1; i>=0;i--)
 	{
+		//Write students' names//
 		file<<StudentArray.getElement(i).getName()<<std::endl;
 		
+		//Write students' grades//
 		for(int j=0; j<SUBSIZE; j++)
 		{
 			file<<StudentArray.getElement(i).getGrade(j)<<" ";
@@ -192,6 +195,7 @@ void Menu::goBack()
 }
 
 //Get the selected option of the user//
+//This function validates the inputs introduced by the users//
 void Menu::selection(int min,int max)
 {
 	while(true)
@@ -204,18 +208,15 @@ void Menu::selection(int min,int max)
           std::cin.ignore();
           std::cout<<"That is not a valid option, please select a number between "<<min<<" and "<<max<<std::endl;
         }
-        else
-        {
+
+		else if( selectedOption >= min && selectedOption <= max)
+		{
+			break;
+		}
 	
-			if( selectedOption >= min && selectedOption <= max)
-			{
-				break;
-			}
-	
-			else
-			{
-				std::cout<<"That is not a valid option, please select a number between "<<min<<" and "<<max<<std::endl;
-			}
-        }
+		else
+		{
+			std::cout<<"That is not a valid option, please select a number between "<<min<<" and "<<max<<std::endl;
+		}
 	}
 }

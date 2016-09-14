@@ -19,7 +19,7 @@ class Student
 	    
 	    //Variables//
 		int grades[SUBSIZE];
-        static std::string subjects[SUBSIZE];//Static array for all the students
+        static std::string subjects[SUBSIZE];//Static array for students' subjects
         std::string name;
         float avGrade;
 
@@ -28,16 +28,15 @@ class Student
         Student();
         ~Student();
     
-        //Static functions//
+        //Static functions for students' subjects//
         static void setSubject(int index, std::string subject);
 		static std::string getSubject(int index);
 		
         //Set & Get Functions//
 		void setName(std::string name);
-        void changeGrade(int index, int grade);
+        void setGrade(int index, int grade);
         int getGrade(int index);
         std::string getName();
-		int subjectExist(std::string subject);
 		
 		//Print Method//
 		 void printGrades();

@@ -22,9 +22,11 @@ class Array
 private:
 	int size;
 	type* data;
-	int binarySearchRecursive(type item, int start, int end);
 	void mergeSort( int middle, int min, int max);
 	void mergeSort(int min, int max);
+	
+	//File Reader//
+	void getStudentData();
 
 public:
 	Array();
@@ -37,22 +39,14 @@ public:
 	
 	//Sorting
 	void mergeS();
-
-	//Searching
-	int binarySearchRecursive(type item);
-
-	//Helper methods//
-	bool checkOrdered();
-	void printRecursive(unsigned n);
-	
-	//File Reader//
-	void getData();
 };
 
 
 template <class type>
 Array<type>::Array()
 {
+	getStudentData();
+	mergeS();
 }
 
 //______________________________________Set & Get Methods________________________________//
@@ -84,33 +78,6 @@ template <class type>
 int Array<type>::getSize()
 {
 	return size;
-}
-
-//________________________________________Searching_______________________________________//
-
-template <class type>
-int Array<type>::binarySearchRecursive(type item)
-{
-	return binarySearchRecursive(item, 0, size - 1);
-}
-template <class type>
-int Array<type>::binarySearchRecursive(type item, int start, int end)
-{
-	//Base case
-	if (start > end)
-		return -1;
-
-	int middle = (start + end) / 2;
-
-	if (item < data[middle])
-		return	binarySearchRecursive(item, start, middle - 1);
-
-	else if (item > data[middle])
-		return binarySearchRecursive(item, middle + 1, end);
-
-	else
-		return middle;
-
 }
 
 //__________________________________________Sorting_____________________________________//
@@ -173,9 +140,7 @@ void Array<Type>::mergeSort(int middle, int min, int max)
 			data[count] = cache2[b];
 			b++;
 			count++;
-
 		}
-
 	}
 
 	//write the rest of the info
@@ -197,123 +162,88 @@ void Array<Type>::mergeSort(int middle, int min, int max)
 	delete[] cache2;
 }
 
-
-//_________________________________Helper Methods________________________________//
-template <class type>
-bool Array<type>::checkOrdered()
-{
-	for (int i = 0; i < size-1; i++)
-	{
-		if (data[i] > data[i + 1])
-		{
-			return false;
-		}
-	}
-	return true;
-}
-	
-template <class type>
-void Array<type>::printRecursive(unsigned n)
-{
-
-	if (n < size)
-	{
-		std::cout << data[n] << ", ";
-		printRecursive(n + 1);
-	}
-
-	else
-	{
-		std::cout << std::endl;
-	}
-}
-
 //________________________________File Reader_____________________________________//
 
 template <class type>
-void Array<type>::getData()
+void Array<type>::getStudentData()
 {
 	std::ifstream file;
 	char buffer[80];
 	std::string currentLine;
-	int lineNum=0;
 	int wordNum=0;
-	int currentStudent=0;
+	int lineNum=0;
+	
 	file.open("StudentFile.txt",std::fstream::in);
-
    if(file.fail())
    {
       std::cout<<"Error opening file"<<std::endl;
    }
-   //Get size of array//
-    while(lineNum==0)
+   
+	//Read first line, and get the number of students in the array//
+	file.getline(buffer,sizeof(buffer));
+	currentLine=buffer;
+	
+	//istringstream distinguishes substrings separated by space//
+	std::istringstream iss1(currentLine);
+	do
 	{
-		file.getline(buffer,sizeof(buffer));
-		currentLine=buffer;
-
-		//istringstream distinguishes substrings separated by space//
-		std::istringstream iss(currentLine);
-		do
+		std::string subString;
+		iss1 >> subString;
+		
+		//Number of students is the first line's fourth
+		//word in the StudentFile.txt file
+		if(wordNum==3)
 		{
-			std::string subString;
-			iss >> subString;
-			if(wordNum==3)
-			{
-				size = atoi(subString.c_str());
-				data= new type[size];
-			}
-			wordNum++;
+			size = atoi(subString.c_str());
+			data= new type[size];
+		}
+		wordNum++;
 
-		}while (iss);
-		lineNum++;
-	}
+	}while (iss1);
 
-     //Get subjects//
-    while(lineNum==1)
+     //Read second line to get subjects' names//
+	file.getline(buffer,sizeof(buffer));
+	currentLine=buffer;
+	wordNum=0;
+	std::istringstream iss2(currentLine);
+	do
 	{
-		file.getline(buffer,sizeof(buffer));
-		currentLine=buffer;
-		wordNum=0;
-		std::istringstream iss(currentLine);
-		do
-		{
-			std::string subString;
-			iss >> subString;
-			if(wordNum<SUBSIZE)
-				Student::setSubject(wordNum,subString);
-			wordNum++;
+		std::string subString;
+		iss2 >> subString;
+		if(wordNum<SUBSIZE)
+			Student::setSubject(wordNum,subString);
+		wordNum++;
 
-		}while (iss);
-		lineNum++;
-	}
-
+	}while (iss2);
+	
+	//Read the remaining line to get students' information//
    	while(!file.eof())
 	{
 		wordNum=0;
 		file.getline(buffer,sizeof(buffer));
-		//Name of a student//
+		currentLine=buffer;
+		
+		//Name of a student (Even row)//
 		if(lineNum%2==0)
 		{
 			Student newStudent;
-			data[currentStudent]=newStudent;
-			data[currentStudent].setName(buffer);
+			data[lineNum/2]=newStudent;
+			data[lineNum/2].setName(currentLine);
 		}
 
-		//Grades of a student//
+		//Grades of a student (Odd row)//
 		else
 		{
-			currentLine=buffer;
 			std::istringstream iss(currentLine);
 			do
 			{
 				std::string grade;
 				iss >> grade;
 				if(wordNum<SUBSIZE)
-					data[currentStudent].changeGrade(wordNum, atoi(grade.c_str()));
+					data[(lineNum-1)/2].setGrade(wordNum, atoi(grade.c_str()));
 				wordNum++;
 
 			}while (iss);
-			currentStudent++;
 		}
 		lineNum++;
 	}
@@ -322,4 +252,5 @@ void Array<type>::getData()
 template <class type>
 Array<type>::~Array()
 {
+	delete []data;
 }

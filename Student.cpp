@@ -9,8 +9,8 @@ jpgl1997@gmail.com
 */
 
 #include "Student.h"
-
-std::string Student::subjects[SUBSIZE]={".",".",".",".",".","."};//Is required to initialize a static array
+//It is required to initialize a static array
+std::string Student::subjects[SUBSIZE]={".",".",".",".",".","."};
 
 Student::Student()
 {
@@ -32,37 +32,15 @@ std::string Student::getSubject(int index)
 	return Student::subjects[index];
 }
 
-int Student::subjectExist(std::string subject)
+void Student::setGrade(int index,int grade)
 {
-  int x=0;
-  while(x<SUBSIZE)
+  grades[index]=grade;
+  avGrade=0;
+  for(int x=0;x<SUBSIZE;x++)
   {
-      if(subjects[x]==subject)
-          break;
-      x++;
+    avGrade+=grades[x];
   }
-
-  if (x>=SUBSIZE)
-  {
-      std::cout<<"The subject doesn't exist"<<std::endl;
-      return -1;
-  }
-  return x;
-}
-
-void Student::changeGrade(int index,int grade)
-{
-
-    if(index!=-1)
-    {
-        grades[index]=grade;
-        avGrade=0;
-        for(int x=0;x<SUBSIZE;x++)
-        {
-          avGrade+=grades[x];
-        }
-        avGrade=avGrade/SUBSIZE;
-    }
+  avGrade=avGrade/SUBSIZE;
 }
 
 //Print Method//
