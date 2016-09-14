@@ -1,6 +1,16 @@
+/*
+Parcial exam 1
+Luis Enrique Guitron A01018616
+Juan Pablo Güitrón A01019936
+Data Structures
+14/09/2016
+legl_1995@hotmail.com
+jpgl1997@gmail.com
+*/
+
 #include "Student.h"
 
-std::string Student::subjects[SUBSIZE]={".",".",".",".",".","."};
+std::string Student::subjects[SUBSIZE]={".",".",".",".",".","."};//Is required to initialize a static array
 
 Student::Student()
 {
@@ -12,7 +22,7 @@ void Student::setName(std::string name)
 }
 
 //Set & Get functions//
-void Student::setSubject(int index, string subject)
+void Student::setSubject(int index, std::string subject)
 {
     subjects[index]=subject;
 }
@@ -22,7 +32,7 @@ std::string Student::getSubject(int index)
 	return Student::subjects[index];
 }
 
-int Student::subjectExist(string subject)
+int Student::subjectExist(std::string subject)
 {
   int x=0;
   while(x<SUBSIZE)
@@ -42,7 +52,6 @@ int Student::subjectExist(string subject)
 
 void Student::changeGrade(int index,int grade)
 {
-    //int id=subjectExist(subject);
 
     if(index!=-1)
     {
@@ -56,8 +65,17 @@ void Student::changeGrade(int index,int grade)
     }
 }
 
+//Print Method//
+void Student::printGrades()
+{
+	std::cout<<"\t"<<name<<std::endl;
+	for(int x=0;x<SUBSIZE;x++)
+	{
+		std::cout<<"\t"<<subjects[x]<<": "<<grades[x]<<std::endl;
+	}
+}
 
-
+//Operator Overloads//
 bool Student::operator > (const Student &student)
 {
 	return(avGrade>student.avGrade);
@@ -78,7 +96,7 @@ bool Student::operator <= (const Student &student)
 	return(avGrade<=student.avGrade);
 }
 
-string Student::getName()
+std::string Student::getName()
 {
   return name;
 }
@@ -87,19 +105,9 @@ int Student::getGrade(int index)
   return grades[index];
 }
 
-void Student::printGrades()
-{
-	std::cout<<"\t"<<name<<std::endl;
-	for(int x=0;x<SUBSIZE;x++)
-	{
-		std::cout<<"\t"<<subjects[x]<<": "<<grades[x]<<std::endl;
-	}
-}
-
 std::ostream & operator<<(std::ostream & stream, const Student & student)
 {
-	stream <<"Name: "<<student.name<<std::endl;
-  stream <<"Average: "<<student.avGrade<<std::endl;
+	stream<<student.name<<": "<<student.avGrade;
 	return stream;
 }
 

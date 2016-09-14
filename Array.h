@@ -3,7 +3,7 @@ Parcial exam 1
 Luis Enrique Guitron A01018616
 Juan Pablo Güitrón A01019936
 Data Structures
-24/08/2016
+14/09/2016
 legl_1995@hotmail.com
 jpgl1997@gmail.com
 */
@@ -239,7 +239,7 @@ void Array<type>::getData()
 	int lineNum=0;
 	int wordNum=0;
 	int currentStudent=0;
-	file.open("StudentFile.txt",fstream::in);
+	file.open("StudentFile.txt",std::fstream::in);
 
    if(file.fail())
    {

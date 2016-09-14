@@ -1,14 +1,25 @@
+/*
+Parcial exam 1
+Luis Enrique Guitron A01018616
+Juan Pablo Güitrón A01019936
+Data Structures
+14/09/2016
+legl_1995@hotmail.com
+jpgl1997@gmail.com
+*/
+
 #include <string>
 #include <stdlib.h>
 #include <iostream>
 #define SUBSIZE 6
-using namespace std;
+
 class Student
 {
     private:
-	
+	    
+	    //Variables//
 		int grades[SUBSIZE];
-        static std::string subjects[SUBSIZE];
+        static std::string subjects[SUBSIZE];//Static array for all the students
         std::string name;
         float avGrade;
 
@@ -25,10 +36,10 @@ class Student
 		void setName(std::string name);
         void changeGrade(int index, int grade);
         int getGrade(int index);
-        string getName();
-		int subjectExist(string subject);
+        std::string getName();
+		int subjectExist(std::string subject);
 		
-		//Print Method
+		//Print Method//
 		 void printGrades();
 		 
 		//Operator Overloads//

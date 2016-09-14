@@ -1,3 +1,13 @@
+/*
+Parcial exam 1
+Luis Enrique Guitron A01018616
+Juan Pablo Güitrón A01019936
+Data Structures
+14/09/2016
+legl_1995@hotmail.com
+jpgl1997@gmail.com
+*/
+
 #include "Menu.h"
 
 Menu::Menu()
@@ -16,8 +26,7 @@ void Menu::display()
     std::cout<<"3. List students sorted by average"<<std::endl;
     std::cout<<"4. Modify grades"<<std::endl;
     std::cout<<"5. Exit"<<std::endl;
-	
-	std::cin>>selectedOption;
+    selection(1,5);
 	
 	switch (selectedOption)
 	{
@@ -42,7 +51,7 @@ void Menu::display()
 		break;
 		
 		default:
-		std::cout<<"That is not a valid option, please select a number between 1 and 5"<<std::endl;
+		std::cout<<"Unexpected error"<<std::endl;
 		display();
 		break;
 	}
@@ -58,26 +67,16 @@ void Menu::gradesByStudent()
 		std::cout<<i+1<<". "<<StudentArray.getElement(i).getName()<<std::endl;
 	}
 	
-	std::cin>>selectedOption;
+	selection(1,StudentArray.getSize());
 	
-	if( selectedOption>0 && selectedOption<=StudentArray.getSize())
-	{
-		StudentArray.getElement(selectedOption-1).printGrades();
-		std::cout<<std::endl<<"Enter any key to continue: ";
-		std::cin>>continueKey;
-		std::cout<<std::endl;
-		display();
-	}
+	std::cout<<std::endl;
 	
-	else
-	{
-		std::cout<<"That is not a valid option, please select a number between 1 and "<<StudentArray.getSize()<<std::endl;
-		gradesByStudent();
-	}
+	StudentArray.getElement(selectedOption-1).printGrades();
+	goBack();
 }
 
 
-//_____________________________________CAMBIAR getElement(0) POR FORMA STATIC_____________________________________________//
+//Show student grades by subject//
 void Menu::gradesBySubject()
 {
 	std::cout<<std::endl<<"Please select a subject to view students' grades on it: "<<std::endl;
@@ -86,48 +85,37 @@ void Menu::gradesBySubject()
 		std::cout<<i+1<<". "<<Student::getSubject(i)<<std::endl;
 	}
 	
-	std::cin>>selectedOption;
+	selection(1,SUBSIZE);
 	
-	if( selectedOption>0 && selectedOption<=SUBSIZE)
+	std::cout<<std::endl<<Student::getSubject(selectedOption-1)<<std::endl;
+	
+	for(int i = 0; i<StudentArray.getSize();i++)
 	{
-		std::cout<<std::endl<<Student::getSubject(selectedOption-1)<<std::endl;
-	
-		for(int i = 0; i<StudentArray.getSize();i++)
-		{
-			std::cout<<i+1<<". "<<StudentArray.getElement(i).getName()<<std::endl;
-			std::cout<<": "<<StudentArray.getElement(i).getGrade(selectedOption-1)<<std::endl;
-		}
-		std::cout<<std::endl<<"Enter any key to continue: ";
-		std::cin>>continueKey;
-		std::cout<<std::endl;
-		display();
+		std::cout<<i+1<<". "<<StudentArray.getElement(i).getName()<<": "<<StudentArray.getElement(i).getGrade(selectedOption-1)<<std::endl;
 	}
-	
-	else
-	{
-		std::cout<<"That is not a valid option, please select a number between 1 and "<<SUBSIZE<<std::endl;
-		gradesBySubject();
-	}
-	
+		
+	goBack();
+
 }
 
+//Sort and show array of students//
 void Menu::sortedAverages()
 {
+	std::cout<<std::endl;
 	for(int i = StudentArray.getSize()-1; i>=0;i--)
 	{
-		std::cout<<StudentArray.getElement(i)<<std::endl;
+		std::cout<<5-i<<". "<<StudentArray.getElement(i)<<std::endl;
 	}
-	std::cout<<std::endl<<"Enter any key to continue: ";
-	std::cin>>continueKey;
-	std::cout<<std::endl;
-	display();
+	goBack();
 }
 
+//Change a specific grade of a student//
 void Menu::modifyGrades()
 {
 	
-	int selectedSubject;
 	int newGrade;
+	int student;
+	int subject;
 	
 	std::cout<<std::endl<<"Please select a student index to modify his/her grades: "<<std::endl;
 	for(int i = 0; i<StudentArray.getSize();i++)
@@ -136,51 +124,39 @@ void Menu::modifyGrades()
 	}
 	
 	//Select student
-	std::cin>>selectedOption;
-	if( selectedOption>0 && selectedOption<=StudentArray.getSize())
-	{
-		std::cout<<std::endl<<"Please select a subject to change the student's grade in it:  "<<std::endl;
-		std::cout<<std::endl<<StudentArray.getElement(selectedOption-1).getName()<<std::endl;
-		for(int i = 0; i<SUBSIZE;i++)
-		{
-			std::cout<<i+1<<". "<<Student::getSubject(i)<<std::endl;
-		}
-		std::cin>>selectedSubject;
-		
-		//Select subject
-		if( selectedSubject>0 && selectedSubject<=SUBSIZE)
-		{
-			std::cout<<std::endl<<StudentArray.getElement(selectedOption-1).getName()<<std::endl;
-			std::cout<<Student::getSubject(selectedSubject-1)<<std::endl;
-			std::cout<<"Enter the new grade:  "<<std::endl;
-			std::cin>>newGrade;
-			StudentArray.getElement(selectedOption-1).changeGrade(selectedSubject-1,newGrade);
-			StudentArray.mergeS();
-			
-			std::cout<<std::endl<<"Enter any key to continue: ";
-			std::cin>>continueKey;
-			std::cout<<std::endl;
-			display();
-		}
+	selection(1,StudentArray.getSize());
+	student=selectedOption-1;
 	
-		else
-		{
-			std::cout<<"That is not a valid option, please select a number between 1 and "<<SUBSIZE<<std::endl;
-			modifyGrades();
-		}	
+	std::cout<<std::endl<<"Please select a subject to change the student's grade in it:  "<<std::endl;
+	
+	std::cout<<StudentArray.getElement(student).getName()<<std::endl;
+	for(int i = 0; i<SUBSIZE;i++)
+	{
+		std::cout<<i+1<<". "<<Student::getSubject(i)<<std::endl;
 	}
 	
-	else
-	{
-		std::cout<<"That is not a valid option, please select a number between 1 and "<<StudentArray.getSize()<<std::endl;
-		modifyGrades();
-	}
+	//Select subject
+	selection(1,SUBSIZE);
+	subject=selectedOption-1;
+	
+	std::cout<<std::endl<<StudentArray.getElement(student).getName()<<std::endl;
+	std::cout<<Student::getSubject(subject)<<std::endl;
+	std::cout<<"Enter the new grade:  "<<std::endl;
+	
+	selection(0,100);
+	newGrade=selectedOption;
+	
+	StudentArray.getElement(student).changeGrade(subject,newGrade);
+	StudentArray.mergeS();
+	goBack();
+
 }
 
+//Save the data in a file when the program ends//
 void Menu::writeTextFile()
 {
-   ofstream file;
-   file.open("StudentFile(1).txt",fstream::out);
+   std::ofstream file;
+   file.open("StudentFile(1).txt",std::fstream::out);
 
    //Write number of students//
    file << "Number of Students: "<<StudentArray.getSize()<<std::endl;
@@ -190,7 +166,7 @@ void Menu::writeTextFile()
    {
    	  file<<Student::getSubject(i)<<" ";
    }
-   file<<endl;
+   file<<std::endl;
 	
 	//Student data//
 	for(int i=StudentArray.getSize()-1; i>=0;i--)
@@ -201,7 +177,45 @@ void Menu::writeTextFile()
 		{
 			file<<StudentArray.getElement(i).getGrade(j)<<" ";
 		}
-		file<<endl;
+		file<<std::endl;
 	}
    file.close();
+}
+
+//Returns to the menu when another function ends//
+void Menu::goBack()
+{
+	std::cout<<std::endl<<"Enter any key to continue: ";
+	std::cin>>continueKey;
+	std::cout<<std::endl;
+	display();
+}
+
+//Get the selected option of the user//
+void Menu::selection(int min,int max)
+{
+	while(true)
+	{
+		std::cout<<"Your selection: ";
+		
+		if ( !(std::cin>>selectedOption) )
+        {
+          std::cin.clear();
+          std::cin.ignore();
+          std::cout<<"That is not a valid option, please select a number between "<<min<<" and "<<max<<std::endl;
+        }
+        else
+        {
+	
+			if( selectedOption >= min && selectedOption <= max)
+			{
+				break;
+			}
+	
+			else
+			{
+				std::cout<<"That is not a valid option, please select a number between "<<min<<" and "<<max<<std::endl;
+			}
+        }
+	}
 }

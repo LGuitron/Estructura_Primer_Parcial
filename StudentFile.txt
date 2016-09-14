@@ -1,5 +1,5 @@
 Number of Students: 5
-Matematicas Fisica Quimica Programacion Historia Deportes
+Math Physics Chemistry Computing Sports History
 Juan Ernesto Gonzalez Garcia
 80 50 70 90 60 100
 Pedro Perez Gutierrez
